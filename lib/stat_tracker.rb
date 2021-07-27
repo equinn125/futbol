@@ -16,4 +16,7 @@ class StatTracker
     StatTracker.new(games, teams, game_teams)
   end
 
+  def count_of_teams
+    @teams[:teamname].count
+  end
 end

@@ -11,5 +11,3 @@ file_paths = {
 }
 
 stat_tracker = StatTracker.from_csv(file_paths)
-
-require 'pry'; binding.pry
