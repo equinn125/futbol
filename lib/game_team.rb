@@ -22,14 +22,14 @@ class GameTeam
     @result                 = params["result"]
     @settled_in             = params["settled_in"]# Not used within existing code put it down
     @head_coach             = params["head_coach"]
-    @goals                  = params["goals"]
-    @shots                  = params["shots"]
-    @tackles                = params["tackles"]
-    @pim                    = params["pim"]# Not used within existing code put it down lines 28-33
-    @powerplayopportunities = params["powerPlayOpportunities"]
-    @powerplaygoals         = params["powerPlayGoals"]
-    @faceoffwinpercentage   = params["faceOffWinPercentage"]
-    @giveaways              = params["giveaways"]
-    @takeaways              = params["takeaways"]
+    @goals                  = params["goals"].to_i
+    @shots                  = params["shots"].to_i
+    @tackles                = params["tackles"].to_i
+    @pim                    = params["pim"].to_i# Not used within existing code put it down lines 28-33
+    @powerplayopportunities = params["powerPlayOpportunities"].to_i
+    @powerplaygoals         = params["powerPlayGoals"].to_i
+    @faceoffwinpercentage   = params["faceOffWinPercentage"].to_f
+    @giveaways              = params["giveaways"].to_i
+    @takeaways              = params["takeaways"].to_i
   end
 end
