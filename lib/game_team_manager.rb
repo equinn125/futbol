@@ -2,19 +2,11 @@ require 'CSV'
 require_relative './game_team'
 require_relative './manager'
 
-class GameTeamManager
+class GameTeamManager < Manager
   attr_reader :game_teams
 
   def initialize(file_path)
-    @file_path = file_path
-    @game_teams = load
-  end
-
-  def load # Chance for Inheritance Refactor
-    data = CSV.read(@file_path, headers: true)
-    data.map do |row|
-      GameTeam.new(row)
-    end
+    @game_teams = load(file_path, GameTeam)
   end
 
   def total_games_all_seasons(id)
