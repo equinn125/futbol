@@ -9,11 +9,6 @@ class TeamManager < Manager
     @teams = load(file_path, Team)
   end
 
-
-  # def load(file_path, object)
-  #   super(file_path, object)
-  # end
-
   def count_of_teams
     @teams.count
   end

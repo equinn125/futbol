@@ -1,6 +1,5 @@
 require_relative './season'
 
-
 class SeasonManager
   attr_reader :seasons_hash
 
