@@ -58,43 +58,43 @@ class StatTracker
   end
 
   def best_offense
-    teams_by_id = team_manager.teams_by_id
-    game_team_manager.best_offense(teams_by_id)
+    id = game_team_manager.best_offense
+    team_manager.team_name_by_id(id)
   end
 
   def worst_offense
-    teams_by_id = team_manager.teams_by_id
-    game_team_manager.worst_offense(teams_by_id)
+    id = game_team_manager.worst_offense
+    team_manager.team_name_by_id(id)
   end
 
   def highest_scoring_visitor
-    teams_by_id = team_manager.teams_by_id
-    game_team_manager.highest_scoring_visitor(teams_by_id)
+    id = game_team_manager.highest_scoring_visitor
+    team_manager.team_name_by_id(id)
   end
 
   def highest_scoring_home_team
-    teams_by_id = team_manager.teams_by_id
-    game_team_manager.highest_scoring_home_team(teams_by_id)
+    id = game_team_manager.highest_scoring_home_team
+    team_manager.team_name_by_id(id)
   end
 
   def lowest_scoring_visitor
-    teams_by_id = team_manager.teams_by_id
-    game_team_manager.lowest_scoring_visitor(teams_by_id)
+    id = game_team_manager.lowest_scoring_visitor
+    team_manager.team_name_by_id(id)
   end
 
   def lowest_scoring_home_team
-    teams_by_id = team_manager.teams_by_id
-    game_team_manager.lowest_scoring_home_team(teams_by_id)
+    id = game_team_manager.lowest_scoring_home_team
+    team_manager.team_name_by_id(id)
   end
 
   def team_info(team_id)
     team_manager.team_info(team_id)
   end
-#not working yet
+
   def best_season(team_id)
     season_manager.best_season(team_id)
   end
-  #not working yet
+
   def worst_season(team_id)
     season_manager.worst_season(team_id)
   end
@@ -113,50 +113,39 @@ class StatTracker
 
   def favorite_opponent(team_id)
     id = game_team_manager.favorite_opponent(team_id)
-    team_manager.team_info(id)["team_name"]
+    team_manager.team_name_by_id(id)
   end
 
   def rival(team_id)
     id = game_team_manager.rival(team_id)
-    team_manager.team_info(id)["team_name"]
+    team_manager.team_name_by_id(id)
   end
 
-  # This isn't working yet.
   def winningest_coach(season)
     season_manager.winningest_coach(season)
   end
-#not working
+
   def worst_coach(season)
     season_manager.worst_coach(season)
   end
-  #not working
+
   def most_accurate_team(season_id)
-    teams_by_id = team_manager.teams_by_id
-    season_manager.most_accurate_team(season_id, teams_by_id)
+    id = season_manager.most_accurate_team(season_id)
+    team_manager.team_name_by_id(id)
   end
-  #not working
+
   def least_accurate_team(season_id)
-    teams_by_id = team_manager.teams_by_id
-    season_manager.least_accurate_team(season_id, teams_by_id)
+    id = season_manager.least_accurate_team(season_id)
+    team_manager.team_name_by_id(id)
   end
 
   def most_tackles(season_id)
-    teams_by_id = team_manager.teams_by_id
-    season_manager.most_tackles(season_id, teams_by_id)
+    id = season_manager.most_tackles(season_id)
+    team_manager.team_name_by_id(id)
   end
 
   def fewest_tackles(season_id)
-    teams_by_id = team_manager.teams_by_id
-    season_manager.fewest_tackles(season_id, teams_by_id)
+    id = season_manager.fewest_tackles(season_id)
+    team_manager.team_name_by_id(id)
   end
 end
-
-
-
-
-
-
-# games = CSV.read(file_paths[:games], headers: true, header_converters: :symbol)
-# teams = CSV.read(file_paths[:teams], headers: true, header_converters: :symbol)
-# game_teams = CSV.read(file_paths[:game_teams], headers: true, header_converters: :symbol)
-# StatTracker.new(games, teams, game_teams)

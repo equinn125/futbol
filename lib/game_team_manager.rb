@@ -6,37 +6,26 @@ class GameTeamManager
 
   def initialize(file_path)
     @file_path = file_path
-    @game_teams = {}
-    load
+    @game_teams = load
   end
 
   def load # Chance for Inheritance Refactor
     data = CSV.read(@file_path, headers: true)
-    data.each do |row|
-      if @game_teams[row["game_id"]].nil?
-        @game_teams[row["game_id"]] = {away: GameTeam.new(row)}
-      else # Too brittle. Turn into a elsif statement and ask if the game_id does contain a home. Determine default value to be an error code
-        @game_teams[row["game_id"]][:home] = GameTeam.new(row)
-      end
+    data.map do |row|
+      GameTeam.new(row)
     end
   end
 
-  def total_games_all_seasons(team_id)# Refactor naming of passing variable
-    total = 0
-    @game_teams.each do |game_id, teams|
-      teams.each do |hoa, team|# Rename team to team object for clarity
-        total += 1 if team_id == team.team_id # Break into multi line for MIKE DAO
-      end
+  def total_games_all_seasons(id)
+    @game_teams.count do |game_team|
+      game_team.team_id == id
     end
-    total
   end
 
-  def total_goals_all_seasons(team_id)
+  def total_goals_all_seasons(id)
     total = 0
-    @game_teams.each do |game_id, teams|
-      teams.each do |hoa, team|
-        total += team.goals.to_i if team_id == team.team_id# Break into multi line for MIKE DAO
-      end
+    @game_teams.each do |game_team|
+      total += game_team.goals if game_team.team_id == id
     end
     total
   end
@@ -46,123 +35,121 @@ class GameTeamManager
     average.round(2)
   end
 
-  def best_offense(teams_by_id)
-    teams_by_id.max_by do |team_id, team_name|
-      average_goals_all_seasons(team_id)
-    end[1]
+  def all_team_ids
+    @game_teams.map do |game_team|
+      game_team.team_id
+    end.uniq
   end
 
-  def worst_offense(teams_by_id)
-    teams_by_id.min_by do |team_id, team_name|
+  def best_offense
+    all_team_ids.max_by do |team_id|
       average_goals_all_seasons(team_id)
-    end[1]
+    end
   end
 
-  def highest_scoring_visitor(teams_by_id)
+  def worst_offense
+    all_team_ids.min_by do |team_id|
+      average_goals_all_seasons(team_id)
+    end
+  end
+
+  def highest_scoring_visitor
     highest_scoring_visitor = away_teams.max_by do |game_team_object|
       away_games_per_team = away_games_per_team(game_team_object.team_id)
       average_goals(away_games_per_team)
     end
-    id = highest_scoring_visitor.team_id
-    teams_by_id[id]
+    highest_scoring_visitor.team_id
   end
 
-  def highest_scoring_home_team(teams_by_id)
+  def highest_scoring_home_team
     highest_scoring_home_team = home_teams.max_by do |game_team_object|
       home_games_per_team = home_games_per_team(game_team_object.team_id)
       average_goals(home_games_per_team)
     end
-    id = highest_scoring_home_team.team_id
-    teams_by_id[id]
+    highest_scoring_home_team.team_id
   end
 
-  def lowest_scoring_visitor(teams_by_id)
+  def lowest_scoring_visitor
     lowest_scoring_visitor = away_teams.min_by do |game_team_object|
       away_games_per_team = away_games_per_team(game_team_object.team_id)
       average_goals(away_games_per_team)
     end
-    id = lowest_scoring_visitor.team_id
-    teams_by_id[id]
+    lowest_scoring_visitor.team_id
   end
 
-  def lowest_scoring_home_team(teams_by_id)
+  def lowest_scoring_home_team
     lowest_scoring_home_team = home_teams.min_by do |game_team_object|
       home_games_per_team = home_games_per_team(game_team_object.team_id)
       average_goals(home_games_per_team)
     end
-    id = lowest_scoring_home_team.team_id
-    teams_by_id[id]
+    lowest_scoring_home_team.team_id
   end
 
   def home_teams
     home_teams = []
-    @game_teams.each do |game_id, game_team_object|
-      home_teams << game_team_object[:home]
+    @game_teams.each do |game_team_object|
+      home_teams << game_team_object if game_team_object.hoa == 'home'
     end
     home_teams
   end
 
   def away_teams
     away_teams = []
-    @game_teams.each do |game_id, game_team_object|
-      away_teams << game_team_object[:away]
+    @game_teams.each do |game_team_object|
+      away_teams << game_team_object if game_team_object.hoa == 'away'
     end
     away_teams
   end
 
-  def home_games_per_team(team_id)
+  def home_games_per_team(id)
     home_games = []
     home_teams.each do |home_team_object|
-      home_games << home_team_object if team_id == home_team_object.team_id
+      home_games << home_team_object if home_team_object.team_id == id
     end
     home_games
   end
 
-  def away_games_per_team(team_id)
+  def away_games_per_team(id)
     away_games = []
     away_teams.each do |away_team_object|
-      away_games << away_team_object if team_id == away_team_object.team_id
+      away_games << away_team_object if away_team_object.team_id == id
     end
     away_games
   end
 
-  def all_games_by_team(team_id)
+  def all_games_by_team(id)
     games = []
-    @game_teams.each do |game_id, teams|
-      teams.each do |hoa, team|
-        games << team if team_id == team.team_id
-      end
+    @game_teams.each do |game_team|
+      games << game_team if game_team.team_id == id
     end
     games
   end
 
   def average_goals(games)
-    goals(games).fdiv(games_count(games))
+    goals_count(games).fdiv(games_count(games))
   end
 
-  def goals(games)
+  def goals_count(games)
     goals = 0
     games.each do |game|
-      goals += game.goals.to_i
+      goals += game.goals
     end
     goals
   end
 
-  def games_count(games)# RENAME TO GAMES COUNT OR SOMTHING SIMILAR
+  def games_count(games)
     games.count
   end
 
-  def average_win_percentage(team_id)
+  def average_win_percentage(id)
     total_games = 0
     total_wins = 0
-    @game_teams.each do |game_id, teams|
-      teams.each do |hoa, team|
-        if team.team_id == team_id
-          if team.result == "WIN"
-            total_wins += 1
-          end
-          total_games += 1
+    @game_teams.each do |game_team|
+      if game_team.team_id == id
+        if game_team.result == "WIN"
+          total_wins += 1
         end
+        total_games += 1
       end
     end
     (total_wins.fdiv(total_games)).round(2)
@@ -173,7 +160,7 @@ class GameTeamManager
     max = games.max_by do |game|
       game.goals
     end
-    max.goals.to_i
+    max.goals
   end
 
   def fewest_goals_scored(team_id)
@@ -181,29 +168,31 @@ class GameTeamManager
     min = games.min_by do |game|
       game.goals
     end
-    min.goals.to_i
+    min.goals
   end
 
   def opponent_results
     {games: 0, wins: 0}
   end
 
+  def all_game_ids_by_team(team_id)
+    game_ids = []
+    @game_teams.each do |game_team|
+      game_ids << game_team.game_id if game_team.team_id == team_id
+    end
+    game_ids
+  end
+
   def opponents_list(team_id)
     list = {}
-    @game_teams.each do |game_id, teams|
-      teams.each do |hoa, team|
-        if team.team_id == team_id
-          if team.hoa == "home"
-            id = teams[:away].team_id
-            list[id] ||= opponent_results
-            list[id][:games] += 1
-            list[id][:wins] += 1 if teams[:away].result == 'WIN'
-          elsif team.hoa == "away"
-            id = teams[:home].team_id
-            list[id] ||= opponent_results
-            list[id][:games] += 1
-            list[id][:wins] += 1 if teams[:home].result == 'WIN'
-          end
+    game_ids = all_game_ids_by_team(team_id)
+    @game_teams.each do |game_team|
+      game_ids.each do |game_id|
+        if game_team.game_id == game_id && game_team.team_id != team_id
+          id = game_team.team_id
+          list[id] ||= opponent_results
+          list[id][:games] += 1
+          list[id][:wins] += 1 if game_team.result == 'WIN'
         end
       end
     end
