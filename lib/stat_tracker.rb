@@ -3,18 +3,18 @@ require_relative './game_manager'
 require_relative './team_manager'
 require_relative './game_team_manager'
 require_relative './season_manager'
+require_relative './manager'
 
-class StatTracker
+class StatTracker < Manager
   attr_reader :game_manager,
               :team_manager,
               :game_team_manager,
               :season_manager
 
-  def initialize(file_paths) # ARE WE BREAKING LAW OF DEMETER?
+  def initialize(file_paths)
     @game_manager      = GameManager.new(file_paths[:games])
     @team_manager      = TeamManager.new(file_paths[:teams])
     @game_team_manager = GameTeamManager.new(file_paths[:game_teams])
-    @season_manager    = SeasonManager.new(@game_manager.seasons, @game_manager.games, @game_team_manager.game_teams)
   end
 
   def self.from_csv(file_paths)
@@ -50,7 +50,7 @@ class StatTracker
   end
 
   def average_goals_by_season
-    game_manager.average_goals_per_season
+    game_manager.average_goals_by_season
   end
 
   def count_of_teams

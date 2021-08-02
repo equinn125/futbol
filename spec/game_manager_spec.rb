@@ -83,12 +83,12 @@ RSpec.describe GameManager do
     end
   end
 #
-  describe '#average_goals_per_season' do
-    it "average_goals_per_season" do
+  describe '#average_goals_by_season' do
+    it "average_goals_by_season" do
       file_path = './data/fixture_games.csv'
       game_manager = GameManager.new(file_path)
 
-      expect(game_manager.average_goals_per_season).to eq({
+      expect(game_manager.average_goals_by_season).to eq({
         "20122013"=>3.87})
     end
   end
