@@ -47,42 +47,40 @@ RSpec.describe StatTracker do
 
   describe '#percentage_home_wins' do
     it 'percentage_home_wins' do
-      expect(@stat_tracker.percentage_home_wins).to eq(62.5)
+      expect(@stat_tracker.percentage_home_wins).to eq(0.64)
     end
   end
 
   describe '#percentage_visitor_wins' do
     it 'percentage_visitor_wins' do
-      expect(@stat_tracker.percentage_visitor_wins).to eq(32.5)
+      expect(@stat_tracker.percentage_visitor_wins).to eq(0.33)
     end
   end
 
   describe '#percentage_ties' do
     it "percentage_ties" do
-      expect(@stat_tracker.percentage_ties).to eq(5.0)
+      expect(@stat_tracker.percentage_ties).to eq(0.03)
     end
   end
 
   describe '#count_of_games_by_season' do
     it "count_of_games_by_season" do
       expect(@stat_tracker.count_of_games_by_season).to eq({
-        "20122013" => 39,
-        "20152016" => 1
+        "20122013" => 39
         })
     end
   end
 
   describe '#average_goals_per_game' do
     it "average_goals_per_game" do
-      expect(@stat_tracker.average_goals_per_game).to eq(3.875)
+      expect(@stat_tracker.average_goals_per_game).to eq(3.87)
     end
   end
 
   describe '#average_goals_per_season' do
     it "average_goals_per_season" do
-      expect(@stat_tracker.average_goals_per_season).to eq({
-        "20122013"=>3.871794871794872,
-        "20152016"=>4.0})
+      expect(@stat_tracker.average_goals_by_season).to eq({
+        "20122013"=>3.87})
     end
   end
 

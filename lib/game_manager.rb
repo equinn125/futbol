@@ -1,22 +1,26 @@
 require 'CSV'
 require_relative './game'
+require_relative './manager'
 
-class GameManager
+
+class GameManager < Manager
   attr_reader :games
 
   def initialize(file_path)
-    @file_path = file_path
-    @games = load
+    @games = load(file_path, Game)
   end
 
-  def load
-    data = CSV.read(@file_path, headers: true)
-    games = []
-    data.each do |row|
-      games.push(Game.new(row))
-    end
-    games
-  end
+  # def load(file_path, object)
+  #   super(file_path, object)
+  # end
+  # def load
+  #   data = CSV.read(@file_path, headers: true)
+  #   games = []
+  #   data.each do |row|
+  #     games.push(Game.new(row))
+  #   end
+  #   games
+  # end
 
   def highest_total_score
     max = 0
@@ -86,7 +90,7 @@ class GameManager
     (goals.fdiv(@games.length)).round(2)
   end
 
-  def average_goals_per_season
+  def average_goals_by_season
     season_data = {}
     total_games = "games"
     total_goals = "goals"
