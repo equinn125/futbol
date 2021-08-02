@@ -90,11 +90,11 @@ class StatTracker
   def team_info(team_id)
     team_manager.team_info(team_id)
   end
-#not working yet
+
   def best_season(team_id)
     season_manager.best_season(team_id)
   end
-  #not working yet
+
   def worst_season(team_id)
     season_manager.worst_season(team_id)
   end

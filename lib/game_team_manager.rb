@@ -16,7 +16,7 @@ class GameTeamManager
     end
   end
 
-  def total_games_all_seasons(id)# Refactor naming of passing variable
+  def total_games_all_seasons(id)
     @game_teams.count do |game_team|
       game_team.team_id == id
     end
