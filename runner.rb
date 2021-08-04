@@ -11,5 +11,5 @@ file_paths = {
 }
 
 stat_tracker = StatTracker.from_csv(file_paths)
-p stat_tracker.game_manager.best_season('6')
-# require 'pry'; binding.pry
+
+require 'pry'; binding.pry
